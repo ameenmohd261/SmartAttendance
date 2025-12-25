@@ -58,6 +58,9 @@ export const drawFaceBox = (canvas, faces) => {
 };
 
 // Simple face matching based on position and size similarity
+// NOTE: This is a simplified implementation for demonstration purposes.
+// For production use, implement proper face embedding comparison using face recognition models
+// like FaceNet or similar for more accurate and secure matching.
 export const matchFace = (currentFace, storedDescriptor) => {
   if (!currentFace || !storedDescriptor) return 0;
   
@@ -73,8 +76,10 @@ export const matchFace = (currentFace, storedDescriptor) => {
   const widthDiff = Math.abs(currentBox.width - storedBox.width);
   const heightDiff = Math.abs(currentBox.height - storedBox.height);
   
+  // Normalization factor for similarity calculation
+  const NORMALIZATION_FACTOR = 1000;
   const totalDiff = centerXDiff + centerYDiff + widthDiff + heightDiff;
-  const similarity = Math.max(0, 1 - totalDiff / 1000); // Normalize to 0-1
+  const similarity = Math.max(0, 1 - totalDiff / NORMALIZATION_FACTOR);
   
   return similarity;
 };

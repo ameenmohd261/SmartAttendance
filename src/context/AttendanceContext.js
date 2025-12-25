@@ -54,7 +54,13 @@ export const AttendanceProvider = ({ children }) => {
   }, [faceDescriptors]);
 
   const login = (username, password) => {
-    // Simple authentication (in production, use proper backend authentication)
+    // Simple authentication for demonstration purposes
+    // WARNING: This is NOT secure for production use
+    // In production, implement proper backend authentication with:
+    // - Encrypted password storage
+    // - JWT tokens or session management
+    // - User roles and permissions
+    // - Password complexity requirements
     if (username === 'admin' && password === 'admin') {
       const userData = { username, role: 'admin' };
       setUser(userData);

@@ -83,7 +83,7 @@ const FaceCapture = () => {
       if (videoRef.current && canvasRef.current) {
         await detectAndDrawFaces();
       }
-    }, 100); // Run detection every 100ms
+    }, 200); // Run detection every 200ms for better performance
   };
 
   const detectAndDrawFaces = async () => {
