@@ -29,9 +29,12 @@ const AttendanceRecords = ({ refreshTrigger }) => {
     });
   };
 
+  const [statusMessage, setStatusMessage] = useState({ text: '', type: '' });
+
   const exportToCSV = () => {
     if (records.length === 0) {
-      alert('No records to export');
+      setStatusMessage({ text: 'No records to export', type: 'error' });
+      setTimeout(() => setStatusMessage({ text: '', type: '' }), 3000);
       return;
     }
 
@@ -61,6 +64,12 @@ const AttendanceRecords = ({ refreshTrigger }) => {
   return (
     <div className="section">
       <h2>📊 Attendance Records</h2>
+      
+      {statusMessage.text && (
+        <div className={`status-message status-${statusMessage.type}`} style={{ marginBottom: '20px' }}>
+          {statusMessage.text}
+        </div>
+      )}
       
       {records.length > 0 && (
         <button 

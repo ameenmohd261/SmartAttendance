@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import * as faceapi from 'face-api.js';
 import { 
   startVideo, 
   stopVideo, 
@@ -89,14 +88,11 @@ const Attendance = ({ onStatusChange, onAttendanceMarked }) => {
 
       for (const userName of userNames) {
         const userDescriptor = new Float32Array(users[userName]);
-        const isMatch = compareFaces(detection.descriptor, userDescriptor, 0.6);
+        const { isMatch, distance } = compareFaces(detection.descriptor, userDescriptor, 0.6);
         
-        if (isMatch) {
-          const distance = faceapi.euclideanDistance(detection.descriptor, userDescriptor);
-          if (distance < minDistance) {
-            minDistance = distance;
-            matchedUser = userName;
-          }
+        if (isMatch && distance < minDistance) {
+          minDistance = distance;
+          matchedUser = userName;
         }
       }
 

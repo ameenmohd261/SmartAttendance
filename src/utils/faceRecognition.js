@@ -35,19 +35,19 @@ export const detectFace = async (videoElement) => {
   return detection;
 };
 
-// Compare two face descriptors
+// Compare two face descriptors and return distance
 export const compareFaces = (descriptor1, descriptor2, threshold = 0.6) => {
-  if (!descriptor1 || !descriptor2) return false;
+  if (!descriptor1 || !descriptor2) return { isMatch: false, distance: 1 };
   
   const distance = faceapi.euclideanDistance(descriptor1, descriptor2);
-  return distance < threshold;
+  return { isMatch: distance < threshold, distance };
 };
 
 // Draw face detection on canvas
-export const drawDetection = (canvas, detection, label = '') => {
+export const drawDetection = (canvas, detection, dimensions, label = '') => {
   if (!canvas || !detection) return;
   
-  const dims = faceapi.matchDimensions(canvas, canvas, true);
+  const dims = faceapi.matchDimensions(canvas, dimensions, true);
   const resizedDetection = faceapi.resizeResults(detection, dims);
   
   faceapi.draw.drawDetections(canvas, resizedDetection);
