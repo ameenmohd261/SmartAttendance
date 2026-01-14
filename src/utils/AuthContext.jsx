@@ -18,7 +18,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (username, password) => {
-    // Simple authentication - check against environment variables
+    // SECURITY NOTE: This is a simple client-side authentication for demonstration purposes.
+    // In production, implement:
+    // 1. Server-side authentication with JWT tokens
+    // 2. Password hashing (bcrypt, argon2)
+    // 3. HTTPS only
+    // 4. Rate limiting and brute force protection
+    // 5. Secure session management
+    
     const adminUsername = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
     const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
 

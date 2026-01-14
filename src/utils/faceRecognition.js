@@ -41,7 +41,15 @@ export const detectFace = async (imageElement) => {
 
 // Compare two face descriptors
 export const compareFaces = (descriptor1, descriptor2, threshold = 0.6) => {
+  // Validate inputs
   if (!descriptor1 || !descriptor2) return false;
+  
+  // Ensure descriptors are valid arrays
+  if (!(descriptor1 instanceof Float32Array || Array.isArray(descriptor1)) ||
+      !(descriptor2 instanceof Float32Array || Array.isArray(descriptor2))) {
+    console.error('Invalid face descriptor type');
+    return false;
+  }
   
   const distance = faceapi.euclideanDistance(descriptor1, descriptor2);
   return distance < threshold;
@@ -49,7 +57,14 @@ export const compareFaces = (descriptor1, descriptor2, threshold = 0.6) => {
 
 // Find matching face from a list of known faces
 export const findMatchingFace = (detectedDescriptor, knownFaces, threshold = 0.6) => {
+  // Validate inputs
   if (!detectedDescriptor || !knownFaces || knownFaces.length === 0) {
+    return null;
+  }
+  
+  // Validate descriptor type
+  if (!(detectedDescriptor instanceof Float32Array || Array.isArray(detectedDescriptor))) {
+    console.error('Invalid detected face descriptor type');
     return null;
   }
   
@@ -57,19 +72,26 @@ export const findMatchingFace = (detectedDescriptor, knownFaces, threshold = 0.6
   let bestDistance = Infinity;
   
   for (const knownFace of knownFaces) {
-    if (!knownFace.faceDescriptor) continue;
+    if (!knownFace.faceDescriptor || !Array.isArray(knownFace.faceDescriptor)) {
+      continue;
+    }
     
-    const distance = faceapi.euclideanDistance(
-      detectedDescriptor,
-      new Float32Array(knownFace.faceDescriptor)
-    );
-    
-    if (distance < threshold && distance < bestDistance) {
-      bestDistance = distance;
-      bestMatch = {
-        ...knownFace,
-        confidence: 1 - distance
-      };
+    try {
+      const distance = faceapi.euclideanDistance(
+        detectedDescriptor,
+        new Float32Array(knownFace.faceDescriptor)
+      );
+      
+      if (distance < threshold && distance < bestDistance) {
+        bestDistance = distance;
+        bestMatch = {
+          ...knownFace,
+          confidence: 1 - distance
+        };
+      }
+    } catch (error) {
+      console.error('Error comparing face descriptors:', error);
+      continue;
     }
   }
   

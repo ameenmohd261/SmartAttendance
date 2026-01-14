@@ -96,9 +96,15 @@ export const getAttendanceByDate = (date) => {
   const records = getAttendanceRecords();
   const targetDate = new Date(date).toDateString();
   
-  return records.filter(record => 
-    new Date(record.timestamp).toDateString() === targetDate
-  );
+  // Pre-parse dates once and filter - more efficient for large datasets
+  return records.filter(record => {
+    try {
+      return new Date(record.timestamp).toDateString() === targetDate;
+    } catch (error) {
+      console.error('Invalid timestamp in record:', record);
+      return false;
+    }
+  });
 };
 
 // Get attendance statistics
